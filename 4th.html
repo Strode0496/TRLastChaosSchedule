@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>테일즈런너 라스트 카오스 4차 업데이트 점령전 시간표</title>
+
+	<!-- 탭 아이콘 이미지 지정 -->
+	<link rel="icon" href="https://trimage.rhaon.co.kr/favicon.ico"/> 
+
+	<!-- 웹폰트 지정	-->
+	<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-gov.min.css" />
+
+	<!-- 스타일 -->
+	<style>
+
+/*		CSS 초기화 */
+		html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video{margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline;}
+		article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section{display: block;}
+		body{line-height: 1;}
+		ol, ul{list-style: none;}
+		blockquote, q{quotes: none;}
+		blockquote:before, blockquote:after, q:before, q:after{content: ''; content: none;}
+		table{border-collapse: collapse; border-spacing: 0;}
+
+/*		웹폰트 적용 */
+		body{font-family: "Pretendard GOV Variable", "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;}
+
+/*		상단 고정 바 */
+		header{
+			width: 100%;
+			height: 100px;
+			position: fixed; top: 0; left: 0; right: 0;
+			background-color: coral;
+		}
+		h1,h2{
+			color: white; display: block; text-align: center;
+		}
+		h1{
+			font-weight: bold; 
+			font-size: 2em;
+			margin-top: 24px; margin-bottom: 4px;
+		}
+
+/*		시간 표시 바 */
+		.currentTime{
+			width: 100%;
+			height: 30px;
+			position: fixed; top: 100px; left: 0; right: 0;
+			background-color: yellowgreen;
+			line-height: 30px;
+			color: white; font-weight: bold; text-align: center;
+		}
+
+/*		fixed 요소들에 의해 가려진 영역 */
+		.headerBehind{
+			width: 100%;
+			height: 130px;
+/*			margin-bottom: 10px;*/
+		}
+
+/*		메인 영역 */
+		main{
+			text-align: center;
+		}
+
+/*		일정 날짜 표시 */
+		.date{
+			width: 300px;
+			height: 30px;
+			margin: 20px auto 10px auto;
+			color: maroon;
+			font-weight: bold;
+			font-size: 1.2em;
+			line-height: 30px;
+			text-align: center;
+			border: solid 2px maroon; border-radius: 10px;
+		}
+
+/*		일정 시각 표시 */
+		.time{
+			width: 200px;
+			padding: 8px 0;
+			font-weight: bold;
+			display: inline-block;
+			color: darkslateblue;
+			text-align: center;
+			border: solid 2px darkslateblue; border-radius: 10px;
+			margin: 0 2px;
+		}
+		.time>hr{
+			width: 180px;
+			border: solid 1px darkslateblue;
+		}
+
+/*		일정 시각 표시(이미 지나간 일정) */
+		.pastDate, .pastTime{
+			color: lightgray !important;
+			border-color: lightgray !important;
+		}
+		.pastTime hr{
+			border-color: lightgray !important;
+		}
+
+/*		일정 시각 표시(진행 중인 일정) */
+		@keyframes scheduleBlink{
+			0%, 100%{color: red; border-color: red;}
+			50%{color: firebrick; border-color: firebrick;}
+		}
+		.nowTime{
+			animation: scheduleBlink 2.8s ease infinite !important;
+		}
+		.nowTime hr{
+			animation: scheduleBlink 2.8s ease infinite !important;
+		}
+
+/*		하단 */
+		footer{
+			text-align: center;
+			color: gray;
+			margin-top: 20px;
+		}
+
+	</style>
+</head>
+<body>
+
+	<!-- 
+	스케줄:
+	첫 날과 마지막 날을 제외하고 평일은 오전 12시(0시) 10분과 오후 9시, 주말은 추가로 오후 4시
+	-->
+
+	<!-- 상단 고정 바 -->
+	<header>
+		<h1>테일즈런너 라스트 카오스 점령전 일정</h1>
+		<h2>기간: 라스트 카오스 4차 업데이트부터 5차 업데이트 이전까지; 2025.01.22. ~ 2025.02.12.</h2>
+	</header>
+
+	<!-- 상단 고정 바 아래 현재 시각 표시(스크립트 사용) -->
+	<div class="currentTime"></div>
+
+	<!-- 상단 고정 바에 가려진 영역 -->
+	<div class="headerBehind"></div>
+
+	<!-- 메인 -->
+	<main></main>
+
+	<!-- 하단 -->
+	<footer>Made by Strode</footer>
+	
+</body>
+
+<script>
+
+	// 현재 시각 업데이트 스크립트
+	function updateTime(){
+
+		// 현재 전체 날짜와 시각을 가져옴
+		const now = new Date();
+
+		// 연도 저장
+		const year = now.getFullYear();
+		// 월 저장 (2자리로 고정)
+		const month = String(now.getMonth() + 1).padStart(2, '0');
+		// 일 저장 (2자리로 고정)
+		const day = String(now.getDate()).padStart(2, '0');
+		// 시 저장 (24시간 형식)
+		const hours = now.getHours();
+		// 분 저장 (2자리로 고정)
+		const minutes = String(now.getMinutes()).padStart(2, '0');
+		// 초 저장 (2자리로 고정)
+		const seconds = String(now.getSeconds()).padStart(2, '0');
+		// 오전인지 오후인지 구분
+		const ampm = hours >= 12 ? '오후' : '오전';
+		// 24시간 형식을 12시간 형식으로 변환
+		const hours12 = hours % 12 || 12;
+		// 요일 저장
+		const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][now.getDay()];
+
+		// 저장된 값 조합
+		const formattedTime = `현재 시각: ${year}.${month}.${day}.(${dayOfWeek}) ${ampm} ${hours12}:${minutes}:${seconds}`;
+		// 현재 시각 텍스트 갱신
+		document.querySelector('.currentTime').textContent = formattedTime;
+	}
+
+	// 1초마다 현재 시각 자동 업데이트
+	setInterval(updateTime, 1000);
+
+	// 페이지를 열면 바로 시각 업데이트
+	updateTime();
+
+	// ====
+
+	document.addEventListener('DOMContentLoaded', function(){
+		const schedules = [
+			{date: "2025.01.22.(수)", times: ["오전 10:00", "오후 09:00"]},
+			{date: "2025.01.23.(목)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.01.24.(금)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.01.25.(토)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
+			{date: "2025.01.26.(일)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
+			{date: "2025.01.27.(월)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
+			{date: "2025.01.28.(화)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
+			{date: "2025.01.29.(수)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
+			{date: "2025.01.30.(목)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
+			{date: "2025.01.31.(금)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.02.01.(토)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
+			{date: "2025.02.02.(일)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
+			{date: "2025.02.03.(월)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.02.04.(화)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.02.05.(수)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.02.06.(목)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.02.07.(금)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.02.08.(토)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
+			{date: "2025.02.09.(일)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
+			{date: "2025.02.10.(월)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.02.11.(화)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.02.12.(수)", times: ["오전 12:10", "오전 10:00"]}
+		];
+
+		// main 요소를 선택
+		const mainElement = document.querySelector('main');
+
+		// 일정 요소 생성
+		schedules.forEach(schedule => {
+
+			// 날짜 표시
+			// 날짜 div 요소 생성 및 date 클래스 추가
+			const dateElement = document.createElement('div');
+			dateElement.classList.add('date');
+			// schedules에서 날짜 값만 빼서 문서에 추가
+			dateElement.innerHTML = `<p>${schedule.date}</p>`;
+			// 날짜 값에서 숫자만 빼서 아이디로 추가
+			const dateId = schedule.date.replace(/[^\d]/g, '') + '999999';
+			dateElement.id = dateId;
+			// 반복
+			mainElement.appendChild(dateElement);
+
+			// 시간 표시
+			schedule.times.forEach(time => {
+				// 시간 div 요소 생성 및 date 클래스 추가
+				const timeElement = document.createElement('div');
+				timeElement.classList.add('time');
+				// schedules에서 시간 값만 빼서 문서에 추가
+				timeElement.innerHTML = `
+					<p>${time}</p>
+					<hr>
+					<p>점령전 시작 전</p>
+				`;
+				// 시간 값에서 숫자만 빼서 아이디로 추가
+				let timeString = time.replace(/[^\d:]/g, '');
+				// 시간 값을 시와 분으로 나누기
+				let [hour, minute] = timeString.split(':');
+				// 오전 12시 즉 자정일 경우 12시를 00시로 바꾸기
+				if(hour === '12' && time.includes('오전')){hour = '00';}
+				// 오후 12시일 경우 12시로 두기
+				if(hour === '12' && time.includes('오후')){hour = '12';}
+				// 오후 1시 이상일 경우 12를 더해서 24시간으로 만들기
+				if(time.includes('오후') && hour !== '12'){
+					hour = (parseInt(hour) + 12).toString();
+				}
+				// 날짜와 합쳐서 아이디로 넣기
+				const timeId = schedule.date.replace(/[^\d]/g, '') + hour + minute + '00';
+				timeElement.id = timeId;
+				// 반복
+				mainElement.appendChild(timeElement);
+			});
+		});
+	});
+
+	// 일정을 확인해서 지난 일정을 회색 처리하고 점령전 종료됨으로 변경
+	function updatePastClasses() {
+		const now = new Date();
+		const nowTime = now.getTime();
+
+		document.querySelectorAll('.date').forEach(element => {
+			const id = element.id;
+			if (id) {
+				const dateTime = new Date(
+					parseInt(id.slice(0, 4)),
+					parseInt(id.slice(4, 6)) - 1,
+					parseInt(id.slice(6, 8))
+				).getTime();
+
+				if (nowTime >= dateTime + 24 * 60 * 60 * 1000) {
+					element.classList.add('pastDate');
+				}
+			}
+		});
+
+		document.querySelectorAll('.time').forEach(element => {
+			const id = element.id;
+			if (id) {
+				const startTime = new Date(
+					parseInt(id.slice(0, 4)),
+					parseInt(id.slice(4, 6)) - 1,
+					parseInt(id.slice(6, 8)),
+					parseInt(id.slice(8, 10)),
+					parseInt(id.slice(10, 12)),
+					parseInt(id.slice(12, 14))
+				).getTime();
+
+				const endTime = startTime + (1 * 60 * 60 + 38 * 60) * 1000;
+
+				if (nowTime >= endTime) {
+					element.classList.add('pastTime');
+					const secondParagraph = element.querySelectorAll('p')[1];
+					if (secondParagraph) {
+						secondParagraph.textContent = '점령전 종료됨';
+					}
+				}
+			}
+		});
+	}
+
+	document.addEventListener('DOMContentLoaded', function(){
+		updatePastClasses();
+		setInterval(updatePastClasses, 1000);
+	});
+
+	// 오늘 날짜 부분으로 스크롤 이동
+	function scrollToToday(){
+		const now = new Date();
+		const todayDateString = now.getFullYear() +
+			String(now.getMonth() + 1).padStart(2, '0') +
+			String(now.getDate()).padStart(2, '0') + '999999';
+
+		const todayDateElement = document.querySelector(`#${CSS.escape(todayDateString)}`);
+
+		if(todayDateElement){
+			todayDateElement.scrollIntoView({
+				behavior: 'smooth',
+				block: 'center'
+			});
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', function(){
+		scrollToToday();
+	});
+
+	// 곧 시작될 점령전의 문구를 'HH:MM:SS 뒤 점령전 시작'으로 변경
+	function updateUpcomingClasses(){
+		const now = new Date();
+		const nowTime = now.getTime();
+
+		let closestTimeElement = null;
+		let closestTimeDiff = Infinity;
+
+		document.querySelectorAll('.time').forEach(element => {
+			const id = element.id;
+			if (id) {
+				const eventTime = new Date(
+					parseInt(id.slice(0, 4)),
+					parseInt(id.slice(4, 6)) - 1,
+					parseInt(id.slice(6, 8)),
+					parseInt(id.slice(8, 10)),
+					parseInt(id.slice(10, 12)),
+					parseInt(id.slice(12, 14))
+				).getTime();
+
+				if (eventTime > nowTime && eventTime - nowTime < closestTimeDiff) {
+					closestTimeElement = element;
+					closestTimeDiff = eventTime - nowTime;
+				}
+			}
+		});
+
+		if (closestTimeElement) {
+			const timeRemaining = closestTimeDiff / 1000; // 남은 시간 (초 단위)
+			const hours = String(Math.floor(timeRemaining / 3600)).padStart(2, '0');
+			const minutes = String(Math.floor((timeRemaining % 3600) / 60)).padStart(2, '0');
+			const seconds = String(Math.floor(timeRemaining % 60)).padStart(2, '0');
+
+			const secondParagraph = closestTimeElement.querySelectorAll('p')[1];
+			if (secondParagraph) {
+				secondParagraph.textContent = `${hours}:${minutes}:${seconds} 뒤 점령전 시작`;
+			}
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', function(){
+		updateUpcomingClasses();
+		setInterval(updateUpcomingClasses, 1000);
+	});
+
+	// 진행 중인 점령전의 문구를 'HH:MM:SS 뒤 점령전 종료'로 변경
+	function updateOngoingClasses() {
+		const now = new Date();
+		const nowTime = now.getTime();
+
+		document.querySelectorAll('.time').forEach(element => {
+			const id = element.id;
+			if (id) {
+				const startTime = new Date(
+					parseInt(id.slice(0, 4)),
+					parseInt(id.slice(4, 6)) - 1,
+					parseInt(id.slice(6, 8)),
+					parseInt(id.slice(8, 10)),
+					parseInt(id.slice(10, 12)),
+					parseInt(id.slice(12, 14))
+				).getTime();
+
+				const endTime = startTime + (1 * 60 * 60 + 38 * 60) * 1000;
+
+				if (nowTime >= startTime && nowTime < endTime) {
+					const timeRemaining = (endTime - nowTime) / 1000;
+					const hours = String(Math.floor(timeRemaining / 3600)).padStart(2, '0');
+					const minutes = String(Math.floor((timeRemaining % 3600) / 60)).padStart(2, '0');
+					const seconds = String(Math.floor(timeRemaining % 60)).padStart(2, '0');
+
+					const secondParagraph = element.querySelectorAll('p')[1];
+					if (secondParagraph) {
+						secondParagraph.textContent = `${hours}:${minutes}:${seconds} 뒤 점령전 종료`;
+					}
+
+					if (!element.classList.contains('nowTime')) {
+						element.classList.add('nowTime');
+					}
+					const dateElement = element.previousElementSibling;
+					if (dateElement && dateElement.classList.contains('date') && !dateElement.classList.contains('nowDate')) {
+						dateElement.classList.add('nowDate');
+					}
+				}
+			}
+		});
+	}
+
+	document.addEventListener('DOMContentLoaded', function(){
+		updateOngoingClasses();
+		setInterval(updateOngoingClasses, 1000);
+	});
+
+</script>
+</html>
