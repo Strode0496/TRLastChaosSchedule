@@ -121,6 +121,63 @@
 			margin-top: 20px;
 		}
 
+/*		모바일 환경 대응 */
+		@media (max-width: 575px) {
+
+	/*		상단 고정 바 */
+			header{
+				height: 120px;
+			}
+			h1,h2{
+				color: white; display: block; text-align: center;
+			}
+			h1>span{
+				display: block;
+			}
+			h2>span{
+				display: none;
+			}
+
+	/*		시간 표시 바 */
+			.currentTime{
+				position: fixed; top: 120px; left: 0; right: 0;
+				background-color: transparent;
+				color: yellowgreen; font-weight: bold; text-align: center;
+				border-bottom: solid 2px yellowgreen;
+			}
+
+	/*		fixed 요소들에 의해 가려진 영역 */
+			.headerBehind{
+				height: 150px;
+			}
+
+	/*		일정 날짜 표시 */
+			.date{
+				width: 90%;
+			}
+
+	/*		일정 시각 표시 */
+			.time{
+				width: 80%;
+				padding: 8px 0;
+				font-weight: bold;
+				display: inline-block;
+				color: darkslateblue;
+				text-align: center;
+				border: solid 2px darkslateblue; border-radius: 10px;
+				margin-bottom: 5px;
+			}
+			.time>hr{
+				width: 90%;
+				border: solid 1px darkslateblue;
+			}
+
+			footer>span{
+				display: block;
+			}
+
+		}
+
 	</style>
 </head>
 <body>
@@ -132,8 +189,8 @@
 
 	<!-- 상단 고정 바 -->
 	<header>
-		<h1>테일즈런너 라스트 카오스 점령전 일정</h1>
-		<h2>기간: 라스트 카오스 4차 업데이트부터 5차 업데이트 이전까지; 2025.01.22. ~ 2025.02.12.</h2>
+		<h1><span>테일즈런너 라스트 카오스</span> <span>점령전 일정</span></h1>
+		<h2>기간: <span>라스트 카오스 4차 업데이트부터 5차 업데이트 이전까지; </span>2025.01.22. ~ 2025.02.12.</h2>
 	</header>
 
 	<!-- 상단 고정 바 아래 현재 시각 표시(스크립트 사용) -->
@@ -146,7 +203,7 @@
 	<main></main>
 
 	<!-- 하단 -->
-	<footer>Copyright 2025. Strode0496 All Rights Reserved.</footer>
+	<footer><span>Copyright 2025. Strode0496</span> <span>All Rights Reserved.</span></footer>
 	
 </body>
 
