@@ -522,20 +522,20 @@
 		scrollToToday();
 
 		// 추가 1: 점령전 5분 전에 푸시 알림 보내기
-		function checkForBattleStart() {
+		function checkForBattleStart(){
 			const now = Date.now();
 			
 			document.querySelectorAll('.battle-time').forEach(element => {
 				const battleTime = parseElementTime(element.id);
-				if (battleTime - now <= 5 * 60 * 1000 && battleTime - now > 4 * 60 * 1000) {
+				if(battleTime - now <= 5 * 60 * 1000 && battleTime - now > 4 * 60 * 1000){
 					pushAlertBeforeFiveMins();
 				}
 			});
 		}
 
 		// 추가 1: 점령전 5분 전에 푸시 알림 보내기
-		function pushAlertBeforeFiveMins() {
-			if (Notification.permission === "granted") {
+		function pushAlertBeforeFiveMins(){
+			if(Notification.permission === "granted"){
 				new Notification("점령전 시작 5분 전!", {
 					body: "미안하다 데빌 물량빨 보려고 어그로 끌었다",
 					icon: 'titi1.webp',
@@ -550,7 +550,9 @@
 
 	// 추가 1: 푸시 알림 권한 확인
 	function pushAlertPermCheck(){
-		Notification.requestPermission()
+		Notification.requestPermission().then(function(result){
+			console.log(result);
+		});
 	}
 
 </script>
