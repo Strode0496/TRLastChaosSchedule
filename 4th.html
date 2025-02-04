@@ -537,7 +537,7 @@
 		function pushAlertBeforeFiveMins(){
 			if(Notification.permission === "granted"){
 				new Notification("점령전 시작 5분 전!", {
-					body: "미안하다 데빌 물량빨 보려고 어그로 끌었다",
+					body: "미안하다 데빌 인해전술 보려고 어그로 끌었다",
 					icon: 'titi1.webp',
 				});
 			}
@@ -550,8 +550,14 @@
 
 	// 추가 1: 푸시 알림 권한 확인
 	function pushAlertPermCheck(){
-		Notification.requestPermission().then(function(result){
-			console.log(result);
+		document.getElementByClass('pushAlertCheck').addEventListener('click', function(){
+			Notification.requestPermission().then(permission => {
+				if(permission === "granted"){
+					alert("알림이 활성화되었습니다.");
+				}else{
+					alert("알림을 허용해야 푸시 알림을 받을 수 있습니다.");
+				}
+			});
 		});
 	}
 
