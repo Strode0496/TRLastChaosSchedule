@@ -272,7 +272,7 @@
 	<main></main>
 
 	<!-- 푸시 알림 확인  -->
-	<button class="pushAlertCheck" onclick="pushAlertPermCheck()">
+	<button class="pushAlertCheck" id="pushAlertCheck" onclick="pushAlertPermCheck()">
 		<img src="alarmClock.webp" alt="푸시알림">
 	</button>
 
@@ -550,7 +550,7 @@
 
 	// 추가 1: 푸시 알림 권한 확인
 	function pushAlertPermCheck(){
-		document.getElementByClass('pushAlertCheck').addEventListener('click', function(){
+		document.getElementById('pushAlertCheck').addEventListener('click', function(){
 			Notification.requestPermission().then(permission => {
 				if(permission === "granted"){
 					alert("알림이 활성화되었습니다.");
