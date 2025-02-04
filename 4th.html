@@ -9,7 +9,6 @@
 	<link rel="icon" href="https://trimage.rhaon.co.kr/favicon.ico"/> 
 
 	<!-- 웹폰트 지정	-->
-	<!-- <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-gov.min.css" /> -->
 	<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/static/woff2/SUITE.css" rel="stylesheet">
 
 	<!-- 스타일 -->
@@ -24,53 +23,38 @@
 		blockquote:before, blockquote:after, q:before, q:after{content: ''; content: none;}
 		table{border-collapse: collapse; border-spacing: 0;}
 
-/*		웹폰트 적용 */
+/*		웹폰트 적용, 페이지 배경 검은색 지정 */
 		body{
-/*			font-family: "Pretendard GOV Variable", "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;*/
 			font-family: 'SUITE', sans-serif;
 			font-feature-settings: 'ss17', 'tnum';
 			background-color: black;
 		}
 
 /*		배경 동영상 */
-/*		div.bgVideoFix{
-			position: fixed;
-			top: 0;
-			left: 0;
-			height: 100%;
-			width: 100%;
-			z-index: -10;
-			opacity: 0.3;
-		}*/
-/*		div.bgVideo, div.bgVideoFix{*/
 		div.bgVideo{
-			position: fixed;
-			top: 0;
-			left: 0;
-			height: 100%;
-			width: 100%;
+			position: fixed; top: 0; left: 0;
+			height: 100%; width: 100%;
 			opacity: 0.3;
 			z-index: -10;
 		}
-
-		.bg-video__content {
+		.bgVideoContent{
 			height: 100%;
 			width: 100%;
 			object-fit: cover;
 		}
 
-/*		상단 고정 바 */
+/*		상단 고정 바, 제목 */
 		header{
 			width: 100%;
 			height: 100px;
 			position: fixed; top: 0; left: 0; right: 0;
 			background-color: rgba(0, 0, 0, 0);
-			backdrop-filter: blur(16px);
+			backdrop-filter: blur(16px) brightness(1.3);
 			box-sizing: border-box;
 			border-bottom: solid 2px lavender;
 			z-index: 10;
 		}
-		h1,h2{
+		h1, h2{
 			color: lavender; display: block; text-align: center;
 		}
 		h1{
@@ -84,15 +68,22 @@
 
 /*		시간 표시 바 */
 		.currentTime{
-			width: 100%;
-			height: 30px;
+			width: 100%; height: 30px;
 			position: fixed; top: 100px; left: 0; right: 0;
 			line-height: 30px;
 			color: lavenderblush; font-weight: bold; text-align: center;
 			border-bottom: solid 2px lavender;
 			background-color: rgba(0, 0, 0, 0);
-			backdrop-filter: blur(16px);
+			backdrop-filter: blur(16px) brightness(0.7);
 			z-index: 10;
+		}
+
+/*		시간 표시 바 아래 그림자 */
+		div.headerShadow{
+			width: 100%; height: 30px;
+			position: fixed; top: 130px; left: 0; right: 0;
+			background: linear-gradient(0deg, #00000000 0%, #00000081 100%);
+			z-index: 9;
 		}
 
 /*		fixed 요소들에 의해 가려진 영역 */
@@ -149,17 +140,6 @@
 		}
 
 /*		일정 시각 표시(진행 중인 일정) */
-/*		@keyframes scheduleBlink{
-			0%, 100%{color: ivory; border-color: ivory;}
-			50%{color: gold; border-color: gold;}
-		}
-		.nowTime{
-			animation: scheduleBlink 2.8s ease infinite !important;
-		}
-		.nowTime hr{
-			animation: scheduleBlink 2.8s ease infinite !important;
-		}*/
-
 		@keyframes scheduleBlinkRainbow{
 			100%,0%{color: pink; border-color: pink;}
 			8%{color: sandybrown; border-color: sandybrown;}
@@ -192,12 +172,12 @@
 /*		모바일 환경 대응 */
 		@media (max-width: 575px) {
 
-	/*		상단 고정 바 */
+/*			상단 고정 바 */
 			header{
 				height: 120px;
 			}
 			h1,h2{
-				color: white; display: block; text-align: center;
+				display: block;
 			}
 			h1>span{
 				display: block;
@@ -206,22 +186,27 @@
 				display: none;
 			}
 
-	/*		시간 표시 바 */
+/*			시간 표시 바 */
 			.currentTime{
 				position: fixed; top: 120px; left: 0; right: 0;
 			}
 
-	/*		fixed 요소들에 의해 가려진 영역 */
+/*			시간 표시 바 아래 그림자 */
+			div.headerShadow{
+				position: fixed; top: 150px; left: 0; right: 0;
+			}
+
+/*			fixed 요소들에 의해 가려진 영역 */
 			.headerBehind{
 				height: 150px;
 			}
 
-	/*		일정 날짜 표시 */
+/*			일정 날짜 표시 */
 			.date{
 				width: 90%;
 			}
 
-	/*		일정 시각 표시 */
+/*			일정 시각 표시 */
 			.time{
 				width: 80%;
 				padding: 8px 0;
@@ -233,6 +218,7 @@
 				width: 90%;
 			}
 
+/*			하단 */
 			footer>span{
 				display: block;
 			}
@@ -240,28 +226,24 @@
 		}
 
 	</style>
+
 </head>
+
 <body>
 
-	<!-- 배경 동영상 재생  -->
-	<!-- <div class="bgVideoFix"> -->
-		<div class="bgVideo">
-			<video class="bg-video__content" autoplay muted loop>
-				<source src="bg2-1.webm" type="video/webm" />
-			</video>
-		</div>
-	<!-- </div> -->
-
-	<!-- 
-	스케줄:
-	첫 날과 마지막 날을 제외하고 평일은 오전 12시(0시) 10분과 오후 9시, 주말은 추가로 오후 4시
-	-->
+	<!-- 배경 동영상 -->
+	<div class="bgVideo">
+		<video class="bgVideoContent" autoplay muted loop>
+			<source src="bg2-1.webm" type="video/webm" />
+		</video>
+	</div>
 
 	<!-- 상단 고정 바 -->
 	<header>
 		<h1><span>테일즈런너 라스트 카오스</span> <span>점령전 일정</span></h1>
 		<h2>기간: <span>라스트 카오스 4차 업데이트부터 5차 업데이트 이전까지; </span>2025.01.22. ~ 2025.02.12.</h2>
 	</header>
+	<div class="headerShadow"></div>
 
 	<!-- 상단 고정 바 아래 현재 시각 표시(스크립트 사용) -->
 	<div class="currentTime"></div>
@@ -279,46 +261,57 @@
 
 <script>
 
-	// 현재 시각 업데이트 스크립트
-	function updateTime(){
-
-		// 현재 전체 날짜와 시각을 가져옴
-		const now = new Date();
-
-		// 연도 저장
-		const year = now.getFullYear();
-		// 월 저장 (2자리로 고정)
-		const month = String(now.getMonth() + 1).padStart(2, '0');
-		// 일 저장 (2자리로 고정)
-		const day = String(now.getDate()).padStart(2, '0');
-		// 시 저장 (24시간 형식)
-		const hours = now.getHours();
-		// 분 저장 (2자리로 고정)
-		const minutes = String(now.getMinutes()).padStart(2, '0');
-		// 초 저장 (2자리로 고정)
-		const seconds = String(now.getSeconds()).padStart(2, '0');
-		// 오전인지 오후인지 구분
-		const ampm = hours >= 12 ? '오후' : '오전';
-		// 24시간 형식을 12시간 형식으로 변환
-		const hours12 = hours % 12 || 12;
-		// 요일 저장
-		const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][now.getDay()];
-
-		// 저장된 값 조합
-		const formattedTime = `현재 시각: ${year}.${month}.${day}.(${dayOfWeek}) ${ampm} ${hours12}:${minutes}:${seconds}`;
-		// 현재 시각 텍스트 갱신
-		document.querySelector('.currentTime').textContent = formattedTime;
-	}
-
-	// 1초마다 현재 시각 자동 업데이트
-	setInterval(updateTime, 1000);
-
-	// 페이지를 열면 바로 시각 업데이트
-	updateTime();
-
-	// ====
-
 	document.addEventListener('DOMContentLoaded', function(){
+
+		// 헬퍼 함수들
+
+		// ID에서 타임스탬프를 추출 (날짜 요소와 시간 요소 구분)
+		function parseElementTime(id){
+			if(id.endsWith("999999")){
+				// 날짜 ID에 있는 YYYYMMDD999999에서 999999를 떼고 날짜 부분만 사용
+				return new Date(
+					parseInt(id.slice(0, 4)),
+					parseInt(id.slice(4, 6)) - 1,
+					parseInt(id.slice(6, 8))
+				).getTime();
+			} else {
+				// 시간 ID에 있는 YYYYMMDDHHMMSS는 전체 사용
+				return new Date(
+					parseInt(id.slice(0, 4)),
+					parseInt(id.slice(4, 6)) - 1,
+					parseInt(id.slice(6, 8)),
+					parseInt(id.slice(8, 10)),
+					parseInt(id.slice(10, 12)),
+					parseInt(id.slice(12, 14))
+				).getTime();
+			}
+		}
+
+		// 시간을 HH:MM:SS 형식으로 변경
+		function formatRemainingTime(totalSeconds) {
+			const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+			const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+			const seconds = String(Math.floor(totalSeconds % 60)).padStart(2, '0');
+			return `${hours}:${minutes}:${seconds}`;
+		}
+		
+		// 현재 시각 실시간 표시
+		function updateTime() {
+			const now = new Date();
+			const year = now.getFullYear();
+			const month = String(now.getMonth() + 1).padStart(2, '0');
+			const day = String(now.getDate()).padStart(2, '0');
+			const hours = now.getHours();
+			const minutes = String(now.getMinutes()).padStart(2, '0');
+			const seconds = String(now.getSeconds()).padStart(2, '0');
+			const ampm = hours >= 12 ? '오후' : '오전';
+			const hours12 = String(hours % 12 || 12).padStart(2, '0');
+			const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][now.getDay()];
+			const formattedTime = `현재 시각: ${year}.${month}.${day}.(${dayOfWeek}) ${ampm} ${hours12}:${minutes}:${seconds}`;
+			document.querySelector('.currentTime').textContent = formattedTime;
+		}
+		
+		// 일정 생성 
 		const schedules = [
 			{date: "2025.01.22.(수)", times: ["오전 10:00", "오후 09:00"]},
 			{date: "2025.01.23.(목)", times: ["오전 12:10", "오후 09:00"]},
@@ -344,80 +337,159 @@
 			{date: "2025.02.12.(수)", times: ["오전 12:10", "오전 10:00"]}
 		];
 
-		// main 요소를 선택
-		const mainElement = document.querySelector('main');
-
 		// 일정 요소 생성
+		const mainElement = document.querySelector('main');
 		schedules.forEach(schedule => {
-
-			// 날짜 표시
-			// 날짜 div 요소 생성 및 date 클래스 추가
+			// 날짜 요소 생성
 			const dateElement = document.createElement('div');
 			dateElement.classList.add('date');
-			// schedules에서 날짜 값만 빼서 문서에 추가
 			dateElement.innerHTML = `<p>${schedule.date}</p>`;
-			// 날짜 값에서 숫자만 빼서 아이디로 추가
-			const dateId = schedule.date.replace(/[^\d]/g, '') + '999999';
-			dateElement.id = dateId;
-			// 반복
+			// 날짜 ID는 위 schedules의 date에서 숫자만 추출하고 999999를 붙여서 YYYYMMDD999999 형식으로 추가
+			dateElement.id = schedule.date.replace(/[^\d]/g, '') + '999999';
 			mainElement.appendChild(dateElement);
 
-			// 시간 표시
+			// 시간 요소 생성
 			schedule.times.forEach(time => {
-				// 시간 div 요소 생성 및 date 클래스 추가
 				const timeElement = document.createElement('div');
 				timeElement.classList.add('time');
-				// schedules에서 시간 값만 빼서 문서에 추가
 				timeElement.innerHTML = `
 					<p>${time}</p>
 					<hr>
 					<p>점령전 시작 전</p>
 				`;
-				// 시간 값에서 숫자만 빼서 아이디로 추가
+				// 시간 ID는 date에서 춧자만 추출하고 times에서는 숫자와 ':'만 남긴 후 시, 분 처리, 그리고 '00' 추가
 				let timeString = time.replace(/[^\d:]/g, '');
-				// 시간 값을 시와 분으로 나누기
 				let [hour, minute] = timeString.split(':');
-				// 오전 12시 즉 자정일 경우 12시를 00시로 바꾸기
-				if(hour === '12' && time.includes('오전')){hour = '00';}
-				// 오후 12시일 경우 12시로 두기
-				if(hour === '12' && time.includes('오후')){hour = '12';}
-				// 오후 1시 이상일 경우 12를 더해서 24시간으로 만들기
-				if(time.includes('오후') && hour !== '12'){
-					hour = (parseInt(hour) + 12).toString();
+				if(hour === '12' && time.includes('오전')){
+					hour = '00';
 				}
-				// 날짜와 합쳐서 아이디로 넣기
-				const timeId = schedule.date.replace(/[^\d]/g, '') + hour + minute + '00';
-				timeElement.id = timeId;
-				// 반복
+				if(hour === '12' && time.includes('오후')){
+					hour = '12';
+				}
+				if(time.includes('오후') && hour !== '12'){
+					hour = String(parseInt(hour) + 12);
+				}
+				timeElement.id = schedule.date.replace(/[^\d]/g, '') + hour + minute + '00';
 				mainElement.appendChild(timeElement);
 			});
 		});
-	});
 
-	// 일정을 확인해서 지난 일정을 회색 처리하고 점령전 종료됨으로 변경
-	function updatePastClasses() {
-		const now = new Date();
-		const nowTime = now.getTime();
+		// 클래스 업데이트 함수들
 
-		document.querySelectorAll('.date').forEach(element => {
-			const id = element.id;
-			if (id) {
-				const dateTime = new Date(
+		// 과거 일정 처리
+		function updatePastClasses() {
+			const nowTime = Date.now();
+
+			// 날짜 요소 ID의 앞 8자리(YYYYMMDD)를 사용하여 비교
+			document.querySelectorAll('.date').forEach(element => {
+				const id = element.id;
+				if (id) {
+					const datePart = id.substring(0, 8);
+					const elementTime = new Date(
+						parseInt(datePart.slice(0,4)),
+						parseInt(datePart.slice(4,6)) - 1,
+						parseInt(datePart.slice(6,8))
+					).getTime();
+					// 하루 지난 경우 과거 처리
+					if(nowTime >= elementTime + 24 * 60 * 60 * 1000){
+						element.classList.add('pastDate');
+					}
+				}
+			});
+
+			// 시간 요소의 종료 시간이 지났으면 과거 처리
+			document.querySelectorAll('.time').forEach(element => {
+				const id = element.id;
+				if (id) {
+					const startTime = parseElementTime(id);
+					// 점령전은 1시간 38분 동안 진행됨 (종료되면 과거 클래스 추가)
+					const endTime = startTime + (1 * 60 * 60 + 38 * 60) * 1000;
+					if (nowTime >= endTime) {
+						element.classList.add('pastTime');
+						const secondParagraph = element.querySelectorAll('p')[1];
+						if (secondParagraph) {
+							secondParagraph.textContent = '점령전 종료됨';
+						}
+					}
+				}
+			});
+		}
+
+		// 곧 시작될 일정 처리 (가장 가까운 미래의 요소)
+		function updateUpcomingClasses(){
+			const nowTime = Date.now();
+			let closestTimeElement = null;
+			let closestTimeDiff = Infinity;
+
+			document.querySelectorAll('.time').forEach(element => {
+				const id = element.id;
+				if (id) {
+					const eventTime = parseElementTime(id);
+					if (eventTime > nowTime && eventTime - nowTime < closestTimeDiff) {
+						closestTimeElement = element;
+						closestTimeDiff = eventTime - nowTime;
+					}
+				}
+			});
+
+			if (closestTimeElement) {
+				const remainingSeconds = closestTimeDiff / 1000;
+				const timeStr = formatRemainingTime(remainingSeconds);
+				const secondParagraph = closestTimeElement.querySelectorAll('p')[1];
+				if (secondParagraph) {
+					secondParagraph.textContent = `${timeStr} 뒤 점령전 시작`;
+				}
+			}
+		}
+
+		// 진행 중인 일정 처리
+		function updateOngoingClasses() {
+			const nowTime = Date.now();
+			document.querySelectorAll('.time').forEach(element => {
+				const id = element.id;
+				if(id){
+					const startTime = parseElementTime(id);
+					// 점령전은 1시간 38분 동안 진행됨 (요소 문구 실시간 수정)
+					const endTime = startTime + (1 * 60 * 60 + 38 * 60) * 1000;
+					if(nowTime >= startTime && nowTime < endTime){
+						const remainingSeconds = (endTime - nowTime) / 1000;
+						const timeStr = formatRemainingTime(remainingSeconds);
+						const secondParagraph = element.querySelectorAll('p')[1];
+						if(secondParagraph){
+							secondParagraph.textContent = `${timeStr} 뒤 점령전 종료`;
+						}
+						if(!element.classList.contains('nowTime')){
+							element.classList.add('nowTime');
+						}
+					}
+				}
+			});
+		}
+
+		// 지금의 일정으로 스크롤 이동
+		function scrollToToday() {
+			const now = new Date();
+			const todayDateString = now.getFullYear() +
+				String(now.getMonth() + 1).padStart(2, '0') +
+				String(now.getDate()).padStart(2, '0') + '999999';
+			const todayDateElement = document.querySelector(`#${CSS.escape(todayDateString)}`);
+			if (todayDateElement) {
+				todayDateElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			}
+		}
+
+		// 헬퍼 함수: ID 파싱 및 시간 포맷
+		function parseElementTime(id) {
+			if (id.endsWith("999999")) {
+				// 날짜 요소: 앞 8자리만 사용
+				return new Date(
 					parseInt(id.slice(0, 4)),
 					parseInt(id.slice(4, 6)) - 1,
 					parseInt(id.slice(6, 8))
 				).getTime();
-
-				if (nowTime >= dateTime + 24 * 60 * 60 * 1000) {
-					element.classList.add('pastDate');
-				}
-			}
-		});
-
-		document.querySelectorAll('.time').forEach(element => {
-			const id = element.id;
-			if (id) {
-				const startTime = new Date(
+			} else {
+				// 시간 요소: 전체 14자리 사용
+				return new Date(
 					parseInt(id.slice(0, 4)),
 					parseInt(id.slice(4, 6)) - 1,
 					parseInt(id.slice(6, 8)),
@@ -425,136 +497,31 @@
 					parseInt(id.slice(10, 12)),
 					parseInt(id.slice(12, 14))
 				).getTime();
-
-				const endTime = startTime + (1 * 60 * 60 + 38 * 60) * 1000;
-
-				if (nowTime >= endTime) {
-					element.classList.add('pastTime');
-					const secondParagraph = element.querySelectorAll('p')[1];
-					if (secondParagraph) {
-						secondParagraph.textContent = '점령전 종료됨';
-					}
-				}
 			}
-		});
-	}
+		}
 
-	document.addEventListener('DOMContentLoaded', function(){
-		updatePastClasses();
+		function formatRemainingTime(totalSeconds) {
+			const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+			const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+			const seconds = String(Math.floor(totalSeconds % 60)).padStart(2, '0');
+			return `${hours}:${minutes}:${seconds}`;
+		}
+
+		// 주기적 업데이트 설정
+		setInterval(updateTime, 1000);
+		updateTime();
+
 		setInterval(updatePastClasses, 1000);
-	});
+		updatePastClasses();
 
-	// 오늘 날짜 부분으로 스크롤 이동
-	function scrollToToday(){
-		const now = new Date();
-		const todayDateString = now.getFullYear() +
-			String(now.getMonth() + 1).padStart(2, '0') +
-			String(now.getDate()).padStart(2, '0') + '999999';
-
-		const todayDateElement = document.querySelector(`#${CSS.escape(todayDateString)}`);
-
-		if(todayDateElement){
-			todayDateElement.scrollIntoView({
-				behavior: 'smooth',
-				block: 'center'
-			});
-		}
-	}
-
-	document.addEventListener('DOMContentLoaded', function(){
-		scrollToToday();
-	});
-
-	// 곧 시작될 점령전의 문구를 'HH:MM:SS 뒤 점령전 시작'으로 변경
-	function updateUpcomingClasses(){
-		const now = new Date();
-		const nowTime = now.getTime();
-
-		let closestTimeElement = null;
-		let closestTimeDiff = Infinity;
-
-		document.querySelectorAll('.time').forEach(element => {
-			const id = element.id;
-			if (id) {
-				const eventTime = new Date(
-					parseInt(id.slice(0, 4)),
-					parseInt(id.slice(4, 6)) - 1,
-					parseInt(id.slice(6, 8)),
-					parseInt(id.slice(8, 10)),
-					parseInt(id.slice(10, 12)),
-					parseInt(id.slice(12, 14))
-				).getTime();
-
-				if (eventTime > nowTime && eventTime - nowTime < closestTimeDiff) {
-					closestTimeElement = element;
-					closestTimeDiff = eventTime - nowTime;
-				}
-			}
-		});
-
-		if (closestTimeElement) {
-			const timeRemaining = closestTimeDiff / 1000; // 남은 시간 (초 단위)
-			const hours = String(Math.floor(timeRemaining / 3600)).padStart(2, '0');
-			const minutes = String(Math.floor((timeRemaining % 3600) / 60)).padStart(2, '0');
-			const seconds = String(Math.floor(timeRemaining % 60)).padStart(2, '0');
-
-			const secondParagraph = closestTimeElement.querySelectorAll('p')[1];
-			if (secondParagraph) {
-				secondParagraph.textContent = `${hours}:${minutes}:${seconds} 뒤 점령전 시작`;
-			}
-		}
-	}
-
-	document.addEventListener('DOMContentLoaded', function(){
-		updateUpcomingClasses();
 		setInterval(updateUpcomingClasses, 1000);
-	});
+		updateUpcomingClasses();
 
-	// 진행 중인 점령전의 문구를 'HH:MM:SS 뒤 점령전 종료'로 변경
-	function updateOngoingClasses() {
-		const now = new Date();
-		const nowTime = now.getTime();
-
-		document.querySelectorAll('.time').forEach(element => {
-			const id = element.id;
-			if (id) {
-				const startTime = new Date(
-					parseInt(id.slice(0, 4)),
-					parseInt(id.slice(4, 6)) - 1,
-					parseInt(id.slice(6, 8)),
-					parseInt(id.slice(8, 10)),
-					parseInt(id.slice(10, 12)),
-					parseInt(id.slice(12, 14))
-				).getTime();
-
-				const endTime = startTime + (1 * 60 * 60 + 38 * 60) * 1000;
-
-				if (nowTime >= startTime && nowTime < endTime) {
-					const timeRemaining = (endTime - nowTime) / 1000;
-					const hours = String(Math.floor(timeRemaining / 3600)).padStart(2, '0');
-					const minutes = String(Math.floor((timeRemaining % 3600) / 60)).padStart(2, '0');
-					const seconds = String(Math.floor(timeRemaining % 60)).padStart(2, '0');
-
-					const secondParagraph = element.querySelectorAll('p')[1];
-					if (secondParagraph) {
-						secondParagraph.textContent = `${hours}:${minutes}:${seconds} 뒤 점령전 종료`;
-					}
-
-					if (!element.classList.contains('nowTime')) {
-						element.classList.add('nowTime');
-					}
-					const dateElement = element.previousElementSibling;
-					if (dateElement && dateElement.classList.contains('date') && !dateElement.classList.contains('nowDate')) {
-						dateElement.classList.add('nowDate');
-					}
-				}
-			}
-		});
-	}
-
-	document.addEventListener('DOMContentLoaded', function(){
-		updateOngoingClasses();
 		setInterval(updateOngoingClasses, 1000);
+		updateOngoingClasses();
+
+		// 초기 스크롤 이동
+		scrollToToday();
 	});
 
 </script>
