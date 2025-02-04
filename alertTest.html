@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<button onclick="alertFunc()">Alert Test</button>
+	<button onclick="checkFunc()">permissionCheck</button>
+	<button onclick="alertPop()">alertPop</button>
+</body>
+<script>
+	function alertFunc(){
+		Notification.requestPermission().then(function(result){
+			console.log(result);
+		});
+	}
+
+	function checkFunc(){
+		let permissionCheck = Notification.permission;
+		console.log(permissionCheck);
+	}
+
+	function alertPop(){
+		let notification;
+		let notificationPermission = Notification.permission;
+		notification = new Notification(`안녕하세요`, {
+			body: `팝업 알람입니다`,
+			icon: 'titi1.webp',
+		});
+	}
+	
+</script>
+</html>
