@@ -263,19 +263,17 @@
 
 	document.addEventListener('DOMContentLoaded', function(){
 
-		// 헬퍼 함수들
-
-		// ID에서 타임스탬프를 추출 (날짜 요소와 시간 요소 구분)
+		// 헬퍼 함수: ID 파싱 및 시간 포맷
 		function parseElementTime(id){
 			if(id.endsWith("999999")){
-				// 날짜 ID에 있는 YYYYMMDD999999에서 999999를 떼고 날짜 부분만 사용
+				// 날짜 요소: 앞 8자리만 사용
 				return new Date(
 					parseInt(id.slice(0, 4)),
 					parseInt(id.slice(4, 6)) - 1,
 					parseInt(id.slice(6, 8))
 				).getTime();
-			} else {
-				// 시간 ID에 있는 YYYYMMDDHHMMSS는 전체 사용
+			}else{
+				// 시간 요소: 전체 14자리 사용
 				return new Date(
 					parseInt(id.slice(0, 4)),
 					parseInt(id.slice(4, 6)) - 1,
@@ -432,18 +430,18 @@
 				}
 			});
 
-			if (closestTimeElement) {
+			if(closestTimeElement){
 				const remainingSeconds = closestTimeDiff / 1000;
 				const timeStr = formatRemainingTime(remainingSeconds);
 				const secondParagraph = closestTimeElement.querySelectorAll('p')[1];
-				if (secondParagraph) {
+				if(secondParagraph){
 					secondParagraph.textContent = `${timeStr} 뒤 점령전 시작`;
 				}
 			}
 		}
 
 		// 진행 중인 일정 처리
-		function updateOngoingClasses() {
+		function updateOngoingClasses(){
 			const nowTime = Date.now();
 			document.querySelectorAll('.time').forEach(element => {
 				const id = element.id;
@@ -467,40 +465,18 @@
 		}
 
 		// 지금의 일정으로 스크롤 이동
-		function scrollToToday() {
+		function scrollToToday(){
 			const now = new Date();
 			const todayDateString = now.getFullYear() +
 				String(now.getMonth() + 1).padStart(2, '0') +
 				String(now.getDate()).padStart(2, '0') + '999999';
 			const todayDateElement = document.querySelector(`#${CSS.escape(todayDateString)}`);
-			if (todayDateElement) {
+			if(todayDateElement){
 				todayDateElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
 			}
 		}
 
-		// 헬퍼 함수: ID 파싱 및 시간 포맷
-		function parseElementTime(id) {
-			if (id.endsWith("999999")) {
-				// 날짜 요소: 앞 8자리만 사용
-				return new Date(
-					parseInt(id.slice(0, 4)),
-					parseInt(id.slice(4, 6)) - 1,
-					parseInt(id.slice(6, 8))
-				).getTime();
-			} else {
-				// 시간 요소: 전체 14자리 사용
-				return new Date(
-					parseInt(id.slice(0, 4)),
-					parseInt(id.slice(4, 6)) - 1,
-					parseInt(id.slice(6, 8)),
-					parseInt(id.slice(8, 10)),
-					parseInt(id.slice(10, 12)),
-					parseInt(id.slice(12, 14))
-				).getTime();
-			}
-		}
-
-		function formatRemainingTime(totalSeconds) {
+		function formatRemainingTime(totalSeconds){
 			const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
 			const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
 			const seconds = String(Math.floor(totalSeconds % 60)).padStart(2, '0');
