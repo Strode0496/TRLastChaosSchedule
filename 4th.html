@@ -160,6 +160,25 @@
 			animation: scheduleBlinkRainbow 15s ease infinite !important;
 		}
 
+/*		푸시 알림 확인 버튼 */
+		button.pushAlertCheck{
+			position: fixed; bottom: 30px; right: 30px;
+			width: 48px; height: 48px;
+			border-radius: 50%;
+			background-color: transparent; backdrop-filter: blur(8px) brightness(0.7);
+			border: solid 2px lavender;
+			transition: background-color 0.3s;
+			cursor: pointer;
+		}
+		button.pushAlertCheck:hover{
+			background-color: #e6e6fa4c;
+			transition: background-color 0.3s;
+		}
+		button.pushAlertCheck:active{
+			background-color: #e6e6fab3;
+			transition: background-color 0.05s;
+		}
+
 /*		하단 */
 		footer{
 			text-align: center;
@@ -251,6 +270,11 @@
 
 	<!-- 메인 -->
 	<main></main>
+
+	<!-- 푸시 알림 확인  -->
+	<button class="pushAlertCheck" onclick="pushAlertPermCheck()">
+		<img src="alarmClock.webp" alt="푸시알림">
+	</button>
 
 	<!-- 하단 -->
 	<footer><span>Copyright 2025. Strode0496</span> <span>All Rights Reserved.</span></footer>
@@ -496,7 +520,38 @@
 
 		// 초기 스크롤 이동
 		scrollToToday();
+
+		// 추가 1: 점령전 5분 전에 푸시 알림 보내기
+		function checkForBattleStart() {
+			const now = Date.now();
+			
+			document.querySelectorAll('.battle-time').forEach(element => {
+				const battleTime = parseElementTime(element.id);
+				if (battleTime - now <= 5 * 60 * 1000 && battleTime - now > 4 * 60 * 1000) {
+					pushAlertBeforeFiveMins();
+				}
+			});
+		}
+
+		// 추가 1: 점령전 5분 전에 푸시 알림 보내기
+		function pushAlertBeforeFiveMins() {
+			if (Notification.permission === "granted") {
+				new Notification("점령전 시작 5분 전!", {
+					body: "미안하다 데빌 물량빨 보려고 어그로 끌었다",
+					icon: 'titi1.webp',
+				});
+			}
+		}
+
+		// 10초마다 점령전 시작 시간과 비교
+		setInterval(checkForBattleStart, 10 * 1000);
+
 	});
+
+	// 추가 1: 푸시 알림 권한 확인
+	function pushAlertPermCheck(){
+		Notification.requestPermission()
+	}
 
 </script>
 </html>
