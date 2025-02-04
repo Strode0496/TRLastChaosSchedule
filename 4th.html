@@ -9,7 +9,8 @@
 	<link rel="icon" href="https://trimage.rhaon.co.kr/favicon.ico"/> 
 
 	<!-- 웹폰트 지정	-->
-	<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-gov.min.css" />
+	<!-- <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-gov.min.css" /> -->
+	<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/static/woff2/SUITE.css" rel="stylesheet">
 
 	<!-- 스타일 -->
 	<style>
@@ -24,22 +25,61 @@
 		table{border-collapse: collapse; border-spacing: 0;}
 
 /*		웹폰트 적용 */
-		body{font-family: "Pretendard GOV Variable", "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;}
+		body{
+/*			font-family: "Pretendard GOV Variable", "Pretendard GOV", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;*/
+			font-family: 'SUITE', sans-serif;
+			font-feature-settings: 'ss17', 'tnum';
+			background-color: black;
+		}
+
+/*		배경 동영상 */
+/*		div.bgVideoFix{
+			position: fixed;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			z-index: -10;
+			opacity: 0.3;
+		}*/
+/*		div.bgVideo, div.bgVideoFix{*/
+		div.bgVideo{
+			position: fixed;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			opacity: 0.3;
+			z-index: -10;
+		}
+
+		.bg-video__content {
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+		}
 
 /*		상단 고정 바 */
 		header{
 			width: 100%;
 			height: 100px;
 			position: fixed; top: 0; left: 0; right: 0;
-			background-color: coral;
+			background-color: rgba(0, 0, 0, 0);
+			backdrop-filter: blur(16px);
+			box-sizing: border-box;
+			border-bottom: solid 2px lavender;
+			z-index: 10;
 		}
 		h1,h2{
-			color: white; display: block; text-align: center;
+			color: lavender; display: block; text-align: center;
 		}
 		h1{
-			font-weight: bold; 
+			font-family: 'SUITE Extrabold';
 			font-size: 2em;
 			margin-top: 24px; margin-bottom: 4px;
+		}
+		h2{
+			font-weight: bold;
 		}
 
 /*		시간 표시 바 */
@@ -47,9 +87,12 @@
 			width: 100%;
 			height: 30px;
 			position: fixed; top: 100px; left: 0; right: 0;
-			background-color: yellowgreen;
 			line-height: 30px;
-			color: white; font-weight: bold; text-align: center;
+			color: lavenderblush; font-weight: bold; text-align: center;
+			border-bottom: solid 2px lavender;
+			background-color: rgba(0, 0, 0, 0);
+			backdrop-filter: blur(16px);
+			z-index: 10;
 		}
 
 /*		fixed 요소들에 의해 가려진 영역 */
@@ -69,49 +112,74 @@
 			width: 300px;
 			height: 30px;
 			margin: 20px auto 10px auto;
-			color: maroon;
-			font-weight: bold;
+			color: lavender;
+			font-family: 'SUITE Extrabold';
 			font-size: 1.2em;
 			line-height: 30px;
 			text-align: center;
-			border: solid 2px maroon; border-radius: 10px;
+			border: solid 2px lavender; border-radius: 4px;
+			backdrop-filter: brightness(0.7);
 		}
 
 /*		일정 시각 표시 */
 		.time{
+			font-weight: bold;
 			width: 200px;
 			padding: 8px 0;
-			font-weight: bold;
 			display: inline-block;
-			color: darkslateblue;
+			color: lavenderblush;
 			text-align: center;
-			border: solid 2px darkslateblue; border-radius: 10px;
+			border: solid 2px lavenderblush; border-radius: 4px;
+			backdrop-filter: brightness(0.7);
 			margin: 0 2px;
 		}
 		.time>hr{
 			width: 180px;
-			border: solid 1px darkslateblue;
+			border: solid 1px lavenderblush;
 		}
+		.time>p:nth-child(1){font-family: 'SUITE Extrabold'; font-weight: normal;}
 
 /*		일정 시각 표시(이미 지나간 일정) */
 		.pastDate, .pastTime{
-			color: lightgray !important;
-			border-color: lightgray !important;
+			color: dimgray !important;
+			border-color: dimgray !important;
 		}
 		.pastTime hr{
-			border-color: lightgray !important;
+			border-color: dimgray !important;
 		}
 
 /*		일정 시각 표시(진행 중인 일정) */
-		@keyframes scheduleBlink{
-			0%, 100%{color: red; border-color: red;}
-			50%{color: firebrick; border-color: firebrick;}
+/*		@keyframes scheduleBlink{
+			0%, 100%{color: ivory; border-color: ivory;}
+			50%{color: gold; border-color: gold;}
 		}
 		.nowTime{
 			animation: scheduleBlink 2.8s ease infinite !important;
 		}
 		.nowTime hr{
 			animation: scheduleBlink 2.8s ease infinite !important;
+		}*/
+
+		@keyframes scheduleBlinkRainbow{
+			100%,0%{color: pink; border-color: pink;}
+			8%{color: sandybrown; border-color: sandybrown;}
+			16%{color: gold; border-color: gold;}
+			25%{color: greenyellow; border-color: greenyellow;}
+			33%{color: palegreen; border-color: palegreen;}
+			41%{color: aquamarine; border-color: aquamarine;}
+			50%{color: powderblue; border-color: powderblue;}
+			58%{color: lightskyblue; border-color: lightskyblue;}
+			66%{color: thistle; border-color: thistle;}
+			75%{color: plum; border-color: plum;}
+			83%{color: mediumpurple; border-color: mediumpurple;}
+			91%{color: hotpink; border-color: hotpink;}
+		}
+		.nowTime{
+			animation: scheduleBlinkRainbow 15s ease infinite !important;
+			backdrop-filter: brightness(1.5) !important;
+		}
+		.nowTime hr{
+			animation: scheduleBlinkRainbow 15s ease infinite !important;
 		}
 
 /*		하단 */
@@ -141,9 +209,6 @@
 	/*		시간 표시 바 */
 			.currentTime{
 				position: fixed; top: 120px; left: 0; right: 0;
-				background-color: transparent;
-				color: yellowgreen; font-weight: bold; text-align: center;
-				border-bottom: solid 2px yellowgreen;
 			}
 
 	/*		fixed 요소들에 의해 가려진 영역 */
@@ -160,16 +225,12 @@
 			.time{
 				width: 80%;
 				padding: 8px 0;
-				font-weight: bold;
-				display: inline-block;
-				color: darkslateblue;
-				text-align: center;
-				border: solid 2px darkslateblue; border-radius: 10px;
+				display: block;
+				margin: 0 auto;
 				margin-bottom: 5px;
 			}
 			.time>hr{
 				width: 90%;
-				border: solid 1px darkslateblue;
 			}
 
 			footer>span{
@@ -181,6 +242,15 @@
 	</style>
 </head>
 <body>
+
+	<!-- 배경 동영상 재생  -->
+	<!-- <div class="bgVideoFix"> -->
+		<div class="bgVideo">
+			<video class="bg-video__content" autoplay muted loop>
+				<source src="bg2-1.webm" type="video/webm" />
+			</video>
+		</div>
+	<!-- </div> -->
 
 	<!-- 
 	스케줄:
