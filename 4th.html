@@ -347,7 +347,7 @@
 			{date: "2025.02.02.(일)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
 			{date: "2025.02.03.(월)", times: ["오전 12:10", "오후 09:00"]},
 			{date: "2025.02.04.(화)", times: ["오전 12:10", "오후 09:00"]},
-			{date: "2025.02.05.(수)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.02.05.(수)", times: ["오전 12:10", "오전 12:50", "오후 09:00"]},
 			{date: "2025.02.06.(목)", times: ["오전 12:10", "오후 09:00"]},
 			{date: "2025.02.07.(금)", times: ["오전 12:10", "오후 09:00"]},
 			{date: "2025.02.08.(토)", times: ["오전 12:10", "오후 04:00", "오후 09:00"]},
@@ -521,29 +521,34 @@
 		// 초기 스크롤 이동
 		scrollToToday();
 
-		// 추가 1: 점령전 5분 전에 푸시 알림 보내기
+		// 추가 1: 점령전 5분 전에 푸시 알림 보내기 (중복 알림 방지)
 		function checkForBattleStart(){
 			const now = Date.now();
-			
-			document.querySelectorAll('.battle-time').forEach(element => {
+			document.querySelectorAll('.time').forEach(element => {
 				const battleTime = parseElementTime(element.id);
-				if(battleTime - now <= 5 * 60 * 1000 && battleTime - now > 4 * 60 * 1000){
-					pushAlertBeforeFiveMins();
+				const timeDiff = battleTime - now;
+				// 5분 전 ~ 4분 30초 전 범위 내일 때
+				if(timeDiff <= 5 * 60 * 1000 && timeDiff > 4.5 * 60 * 1000){
+					// 이미 알림을 보냈으면 건너뜀
+					if(!element.dataset.notified){
+						pushAlertBeforeFiveMins();
+						element.dataset.notified = "true";
+					}
 				}
 			});
 		}
 
-		// 추가 1: 점령전 5분 전에 푸시 알림 보내기
+		// 푸시 알림 보내기 함수
 		function pushAlertBeforeFiveMins(){
-			if(Notification.permission === "granted"){
+			if (Notification.permission === "granted") {
 				new Notification("점령전 시작 5분 전!", {
-					body: "미안하다 데빌 인해전술 보려고 어그로 끌었다",
+					body: "곧 카오스 점령전이 시작됩니다, 준비하세요!",
 					icon: 'titi1.webp',
 				});
 			}
 		}
 
-		// 10초마다 점령전 시작 시간과 비교
+		// 10초마다 점령전 시작 5분 전 체크
 		setInterval(checkForBattleStart, 10 * 1000);
 
 	});
@@ -553,9 +558,9 @@
 		document.getElementById('pushAlertCheck').addEventListener('click', function(){
 			Notification.requestPermission().then(permission => {
 				if(permission === "granted"){
-					alert("알림이 활성화되었습니다.");
+					alert("알림이 활성화되었습니다.\n(이 메시지가 여러 차례 뜬다면 ESC 버튼을 연타해 주세요!)");
 				}else{
-					alert("알림을 허용해야 푸시 알림을 받을 수 있습니다.");
+					alert("알림을 허용해야 푸시 알림을 받을 수 있습니다.\n(이 메시지가 여러 차례 뜬다면 ESC 버튼을 연타해 주세요!)");
 				}
 			});
 		});
