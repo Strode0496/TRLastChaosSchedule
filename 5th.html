@@ -205,6 +205,35 @@
 			margin-top: 20px;
 		}
 
+/*		6번째 페이지로 가는 버튼 */
+		a.goto6th{
+			width: 600px; height: 50px; border-radius: 4px;
+			position: fixed; left: 50%; transform: translate(-50%, 0); bottom: 24px;
+			border: solid 2px plum;
+			color: plum; text-align: center; text-decoration: none;
+			background-color: transparent; transition: background-color 0.3s;
+			backdrop-filter: blur(8px) brightness(0.7);
+			padding-top: 16px;
+		}
+		a.goto6th>span:nth-child(1), a.goto6th>span:nth-child(2){
+			font-size: 1.2em; font-weight: bold; 
+		}
+		a.goto6th>span:nth-child(3){
+			display: block;
+		}
+		a.goto6th:hover{
+			background-color: #dda0dd4c;
+			transition: background-color 0.3s;
+		}
+		a.goto6th:active{
+			background-color: #dda0ddb3;
+			transition: background-color 0.05s;
+		}
+		div.nextPageButtonBehind{
+			width: 100%;
+			height: 70px;
+		}
+
 /*		모바일 환경 대응 */
 		@media (max-width: 575px){
 
@@ -252,6 +281,31 @@
 			}
 			.time>hr{
 				width: 90%;
+			}
+
+/*			6번째 페이지로 가는 버튼 */
+			a.goto6th{
+				width: 96%; height: 70px; border-radius: 4px;
+				position: fixed; left: 50%; transform: translate(-50%, 0); top: 160px; z-index: 11;
+				padding-top: 16px;
+			}
+			a.goto6th>span:nth-child(1), a.goto6th>span:nth-child(2){
+				font-size: 1.2em; font-weight: bold; 
+			}
+			a.goto6th>span{
+				display: block;
+			}
+			a.goto6th:hover{
+				background-color: #dda0dd4c;
+				transition: background-color 0.3s;
+			}
+			a.goto6th:active{
+				background-color: #dda0ddb3;
+				transition: background-color 0.05s;
+			}
+			div.nextPageButtonBehind{
+				width: 0;
+				height: 0;
 			}
 
 /*			하단 */
@@ -322,6 +376,12 @@
 			<path d="M16,5.56c-2.18,0-3.96,1.78-3.96,3.96s1.78,3.95,3.96,3.95,3.96-1.77,3.96-3.95-1.78-3.96-3.96-3.96ZM16,12.47c-1.63,0-2.96-1.32-2.96-2.95s1.33-2.96,2.96-2.96,2.96,1.33,2.96,2.96-1.33,2.95-2.96,2.95Z" fill="mistyrose" stroke="mistyrose" stroke-miterlimit="10"/>
 		</svg>
 	</button>
+
+	<!-- 5th.html로 이동하는 버튼 -->
+	<a href="6th.html" class="goto6th"><span>6차 업데이트(2월 26일) 이후의 일정은</span> <span>별개 페이지에서 안내됩니다!</span> <span>6차 업데이트 이후 일정 보러 가기 (클릭)</span><br></a>
+	<!-- 버튼 아래 가려지는 영역 -->
+	<div class="nextPageButtonBehind"></div>
+
 
 	<!-- 하단 -->
 	<footer><span>Copyright 2025. Strode0496</span> <span>All Rights Reserved.</span></footer>
