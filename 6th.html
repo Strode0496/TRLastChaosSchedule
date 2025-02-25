@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>테일즈런너 라스트 카오스 6차 업데이트 점령전 시간표</title>
+
+	<!-- 탭 아이콘 이미지 지정 -->
+	<link rel="icon" href="https://trimage.rhaon.co.kr/favicon.ico"/> 
+
+	<!-- 웹폰트 지정 -->
+	<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/static/woff2/SUITE.css" rel="stylesheet">
+
+	<!-- jQuery 불러오기 -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+	<!-- 스타일 -->
+	<style>
+
+/*		CSS 초기화 */
+		html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video{margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline;}
+		article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section{display: block;}
+		body{line-height: 1;}
+		ol, ul{list-style: none;}
+		blockquote, q{quotes: none;}
+		blockquote:before, blockquote:after, q:before, q:after{content: ''; content: none;}
+		table{border-collapse: collapse; border-spacing: 0;}
+
+/*		웹폰트 적용, 페이지 배경 검은색 지정 */
+		body{
+			font-family: 'SUITE', sans-serif;
+			font-feature-settings: 'ss17', 'tnum';
+			background-color: black;
+		}
+
+/*		배경 동영상 */
+		div.bgVideo{
+			position: fixed; top: 0; left: 0;
+			height: 100%; width: 100%;
+			opacity: 0.3;
+			z-index: -10;
+		}
+		.bgVideoContent{
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+		}
+
+/*		상단 고정 바, 제목 */
+		header{
+			width: 100%;
+			height: 100px;
+			position: fixed; top: 0; left: 0; right: 0;
+			background-color: rgba(0, 0, 0, 0);
+			backdrop-filter: blur(16px) brightness(1.3);
+			box-sizing: border-box;
+			border-bottom: solid 2px thistle;
+			z-index: 10;
+		}
+		h1, h2{
+			color: thistle; display: block; text-align: center;
+		}
+		h1{
+			font-weight: 800;
+			font-size: 2em;
+			margin-top: 24px; margin-bottom: 4px;
+		}
+		h2{
+			font-weight: bold;
+		}
+
+/*		시간 표시 바 */
+		.currentTime{
+			width: 100%; height: 30px;
+			position: fixed; top: 100px; left: 0; right: 0;
+			line-height: 30px;
+			color: ghostwhite; font-weight: bold; text-align: center;
+			border-bottom: solid 2px thistle;
+			background-color: rgba(0, 0, 0, 0);
+			backdrop-filter: blur(16px) brightness(0.7);
+			z-index: 10;
+		}
+
+/*		시간 표시 바 아래 그림자 */
+		div.headerShadow{
+			width: 100%; height: 30px;
+			position: fixed; top: 130px; left: 0; right: 0;
+			background: linear-gradient(0deg, #00000000 0%, #00000081 100%);
+			z-index: 9;
+		}
+
+/*		fixed 요소들에 의해 가려진 영역 */
+		.headerBehind{
+			width: 100%;
+			height: 130px;
+/*			margin-bottom: 10px;*/
+		}
+
+/*		메인 영역 */
+		main{
+			text-align: center;
+		}
+
+/*		일정 날짜 표시 */
+		.date{
+			width: 300px;
+			height: 30px;
+			margin: 20px auto 10px auto;
+			color: thistle;
+			font-weight: 800;
+			font-size: 1.2em;
+			line-height: 30px;
+			text-align: center;
+			border: solid 2px thistle; border-radius: 4px;
+			backdrop-filter: brightness(0.7);
+		}
+
+/*		일정 시각 표시 */
+		.time{
+			font-weight: bold;
+			width: 200px;
+			padding: 8px 0;
+			display: inline-block;
+			color: ghostwhite;
+			text-align: center;
+			border: solid 2px ghostwhite; border-radius: 4px;
+			backdrop-filter: brightness(0.7);
+			margin: 0 2px;
+		}
+		.time>hr{
+			width: 180px;
+			border: solid 1px ghostwhite;
+		}
+		.time>p:nth-child(1){font-weight: 800;}
+
+/*		일정 시각 표시(이미 지나간 일정) */
+		.pastDate, .pastTime{
+			color: dimgray !important;
+			border-color: dimgray !important;
+		}
+		.pastTime hr{
+			border-color: dimgray !important;
+		}
+
+/*		일정 시각 표시(진행 중인 일정) */
+		/*@keyframes scheduleBlinkRainbow{
+			100%,0%{color: deeppink; border-color: deeppink;}
+			10%{color: orangered; border-color: orangered;}
+			20%{color: orange; border-color: orange;}
+			30%{color: lawngreen; border-color: lawngreen;}
+			40%{color: lime; border-color: lime;}
+			50%{color: mediumturquoise; border-color: mediumturquoise;}
+			60%{color: dodgerblue; border-color: dodgerblue;}
+			70%{color: orchid; border-color: orchid;}
+			80%{color: mediumorchid; border-color: mediumorchid;}
+			90%{color: darkorchid; border-color: darkorchid;}
+		}
+		.nowTime{
+			animation: scheduleBlinkRainbow 15s ease infinite !important;
+			backdrop-filter: brightness(1.5) !important;
+		}
+		.nowTime hr{
+			animation: scheduleBlinkRainbow 15s ease infinite !important;
+		}*/
+		@keyframes scheduleBlinkGold{
+			100%,0%{color: lightskyblue; border-color: lightskyblue;}
+			10%{color: darkviolet; border-color: darkviolet;}
+			60%{color: lightskyblue; border-color: lightskyblue;}
+		}
+		.nowTime{
+			animation: scheduleBlinkGold 6.4s ease infinite !important;
+/*			backdrop-filter: brightness(1.5) !important;*/
+		}
+		.nowTime hr{
+			animation: scheduleBlinkGold 6.4s ease infinite !important;
+		}
+
+
+/*		버튼 */
+		button.pushAlertCheck, button.toggleBgVideo, button.mapListBtn{
+			position: fixed; bottom: 30px; right: 30px;
+			width: 48px; height: 48px;
+			border-radius: 50%;
+			background-color: transparent; backdrop-filter: blur(8px) brightness(0.7);
+			border: solid 2px thistle;
+			transition: background-color 0.3s;
+			cursor: pointer;
+		}
+		button.toggleBgVideo{
+			position: fixed; bottom: 80px; right: 30px;
+		}
+		button.mapListBtn{
+			position: fixed; bottom: 130px; right: 30px;
+		}
+		button.pushAlertCheck:hover, button.toggleBgVideo:hover, button.mapListBtn:hover{
+			background-color: #d8bfd84c;
+			transition: background-color 0.3s;
+		}
+		button.pushAlertCheck:active, button.toggleBgVideo:active, button.mapListBtn:active{
+			background-color: #d8bfd8b3;
+			transition: background-color 0.05s;
+		}
+
+/*		하단 */
+		footer{
+			text-align: center;
+			color: gray;
+			margin-top: 20px;
+		}
+
+/*		모바일 환경 대응 */
+		@media (max-width: 575px){
+
+/*			상단 고정 바 */
+			header{
+				height: 120px;
+			}
+			h1,h2{
+				display: block;
+			}
+			h1>span{
+				display: block;
+			}
+			h2>span{
+				display: none;
+			}
+
+/*			시간 표시 바 */
+			.currentTime{
+				position: fixed; top: 120px; left: 0; right: 0;
+			}
+
+/*			시간 표시 바 아래 그림자 */
+			div.headerShadow{
+				position: fixed; top: 150px; left: 0; right: 0;
+			}
+
+/*			fixed 요소들에 의해 가려진 영역 */
+			.headerBehind{
+				height: 150px;
+			}
+
+/*			일정 날짜 표시 */
+			.date{
+				width: 90%;
+			}
+
+/*			일정 시각 표시 */
+			.time{
+				width: 80%;
+				padding: 8px 0;
+				display: block;
+				margin: 0 auto;
+				margin-bottom: 5px;
+			}
+			.time>hr{
+				width: 90%;
+			}
+
+/*			하단 */
+			footer>span{
+				display: block;
+			}
+
+		}
+
+	</style>
+
+</head>
+
+<body>
+
+	<!-- 배경 동영상 -->
+	<div class="bgVideo">
+		<video class="bgVideoContent" autoplay muted loop>
+			<source src="bg3.webm" type="video/webm" />
+		</video>
+	</div>
+
+	<!-- 상단 고정 바 -->
+	<header>
+		<h1><span>테일즈런너 라스트 카오스</span> <span>점령전 일정</span></h1>
+		<h2>기간: <span>라스트 카오스 6차 업데이트부터 채널 종료까지; </span>2025.02.26. ~ 2025.03.12.</h2>
+	</header>
+	<div class="headerShadow"></div>
+
+	<!-- 상단 고정 바 아래 현재 시각 표시 -->
+	<div class="currentTime"></div>
+
+	<!-- 상단 고정 바에 가려진 영역 -->
+	<div class="headerBehind"></div>
+
+	<!-- 메인 -->
+	<main></main>
+
+	<!-- 푸시 알림 확인 -->
+	<button class="pushAlertCheck" id="pushAlertCheck">
+		<svg id="uuid-c7564fb4-e81c-4dd3-bb0f-7b741426d28c" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+			<path d="M27.109,16.972c0,6.136-4.975,11.11-11.11,11.11s-11.109-4.975-11.109-11.11S9.865,5.863,15.999,5.863s11.11,4.974,11.11,11.108Z" fill="none" stroke="thistle" stroke-miterlimit="10" stroke-width="2"/>
+			<path d="M9.26,4.064c-2.82,1.46-5.09,3.83-6.44,6.71-.86-.84-1.39-2.02-1.39-3.31,0-2.57,2.09-4.65,4.66-4.65,1.23,0,2.34.47,3.17,1.25Z" fill="none" stroke="thistle" stroke-linejoin="round" stroke-width="2"/>
+			<path d="M30.57,7.464c0,1.29-.531,2.47-1.391,3.31-1.35-2.88-3.62-5.25-6.44-6.71.83-.78,1.94-1.25,3.17-1.25,2.569,0,4.66,2.08,4.66,4.65Z" fill="none" stroke="thistle" stroke-linejoin="round" stroke-width="2"/>
+			<line x1="5.792" y1="29.185" x2="9.231" y2="25.758" fill="none" stroke="thistle" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>
+			<line x1="26.209" y1="29.185" x2="22.77" y2="25.758" fill="none" stroke="thistle" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>
+			<line x1="15.458" y1="11.185" x2="15.458" y2="17.77" fill="none" stroke="thistle" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>
+			<line x1="15.458" y1="17.77" x2="19.458" y2="17.77" fill="none" stroke="thistle" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>
+		</svg>
+	</button>
+
+	<!-- 배경 동영상 켜고 끄기 -->
+	<button class="toggleBgVideo" id="toggleBgVideo">
+		<svg id="uuid-164d639d-b9e6-4805-93a3-f06aa1946284" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+			<path d="M25.21,5.63h-15.46l2,2h13.46c.94,0,1.7.77,1.7,1.71v13.32c0,.04,0,.08-.01.12l1.59,1.59c.11-.2.19-.42.26-.64.11-.34.16-.7.16-1.07v-13.32c0-2.05-1.66-3.71-3.7-3.71ZM25.21,24.37H6.79c-.94,0-1.7-.77-1.7-1.71v-13.32c0-.94.76-1.71,1.7-1.71h2.14l-2-2h-.14c-2.04,0-3.7,1.66-3.7,3.71v13.32c0,2.05,1.66,3.71,3.7,3.71h18.42c.7,0,1.37-.2,1.92-.54l-1.51-1.51c-.13.03-.27.05-.41.05Z" fill="thistle" stroke-width="0"/>
+			<path d="M26.91,19.07l-3.329-3.329c-.779-.779-2.043-.779-2.822,0l-.449.449,1.41,1.41.45-.45,4.74,4.74,1.84,1.84c.11-.34.16-.7.16-1.07v-1.59l-2-2ZM16.96,19.54l-5.849-5.849c-.779-.779-2.043-.779-2.822,0l-3.199,3.199-2,2v2.82l2-2,4.61-4.6,5.847,5.847c.78.78,2.045.779,2.824-.002l1.939-1.945-1.41-1.41-1.94,1.94Z" fill="thistle" stroke-width="0"/>
+			<rect x="15" y="-1.309" width="2" height="34.618" rx="1" ry="1" transform="translate(-6.627 16) rotate(-45)" fill="thistle" stroke-width="0"/>
+		</svg>
+	</button>
+
+	<!-- 등장 맵 버튼 -->
+	<button class="mapListBtn" id="mapListBtn" onclick="window.open('https://files.catbox.moe/mkfite.webp', '_blank')">
+		<svg id="uuid-b58d1214-1bd0-4b81-a87f-f2ed973ddda8" data-name="레이어 3" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+			<g>
+			  <path d="M29.68,26.57l-1.85-9.9c-.22-1.22-1.29-2.1-2.53-2.1h-3.12l.45-.68.26-.41v-.02c.67-1.18,1.01-2.52,1.01-3.87,0-.57-.06-1.14-.18-1.71-.65-3.04-3.13-5.46-6.17-6.04-2.35-.46-4.76.14-6.59,1.66-1.82,1.5-2.86,3.72-2.86,6.09,0,1.28.31,2.53.9,3.66l-.03.04.84,1.28h-3.11c-1.24,0-2.31.88-2.53,2.1l-1.85,9.9c-.14.74.07,1.53.55,2.11.49.59,1.21.93,1.98.93h22.3c.77,0,1.49-.34,1.99-.93.48-.6.68-1.37.54-2.11ZM12.24,5.04c1.36-1.13,3.16-1.58,4.94-1.24,2.26.43,4.1,2.24,4.58,4.5.34,1.57.06,3.17-.81,4.49l-1.17,1.78-.33.5-.67,1-.33.5-2.17,3.28c-.07.11-.23.15-.36.12-.07-.01-.12-.04-.19-.11-.02-.02-.04-.05-.06-.08l-2.13-3.21-1.32-2-1.17-1.77c-.62-.95-.95-2.06-.95-3.21,0-1.77.78-3.43,2.14-4.55ZM11.91,17.75h-.01l-1.69-1.18h.92l.07.1.71,1.08ZM4.85,27.61c-.17,0-.33-.07-.45-.21-.1-.12-.14-.3-.11-.47l1.84-9.89c.05-.28.29-.47.57-.47l5.59,3.88.41.29-7.61,6.87h-.24ZM8.82,27.61l6-5.41,7.82,5.41h-13.82ZM27.6,27.4c-.12.14-.28.21-.45.21h-1l-8.76-6.07c.22-.16.41-.35.57-.59l2.9-4.38h4.44c.28,0,.52.19.57.46l1.85,9.89c.02.17-.02.36-.12.48Z" fill="thistle" stroke-width="0"/>
+			  <polygon points="18.78 16.07 18.45 16.57 18.44 16.57 18.78 16.07" fill="thistle" stroke-width="0"/>
+			</g>
+			<path d="M16,5.56c-2.18,0-3.96,1.78-3.96,3.96s1.78,3.95,3.96,3.95,3.96-1.77,3.96-3.95-1.78-3.96-3.96-3.96ZM16,12.47c-1.63,0-2.96-1.32-2.96-2.95s1.33-2.96,2.96-2.96,2.96,1.33,2.96,2.96-1.33,2.95-2.96,2.95Z" fill="thistle" stroke="thistle" stroke-miterlimit="10"/>
+		</svg>
+	</button>
+
+	<!-- 하단 -->
+	<footer><span>Copyright 2025. Strode0496</span> <span>All Rights Reserved.</span></footer>
+	
+</body>
+
+<script>
+
+	jQuery(document).ready(function(){
+
+		// 헬퍼 함수: ID 파싱 및 시간 포맷
+		function parseElementTime(id){
+			if(id.endsWith("999999")){
+				// 날짜 요소: 앞 8자리만 사용
+				return new Date(
+					parseInt(id.slice(0, 4)),
+					parseInt(id.slice(4, 6)) - 1,
+					parseInt(id.slice(6, 8))
+				).getTime();
+			}else{
+				// 시간 요소: 전체 14자리 사용
+				return new Date(
+					parseInt(id.slice(0, 4)),
+					parseInt(id.slice(4, 6)) - 1,
+					parseInt(id.slice(6, 8)),
+					parseInt(id.slice(8, 10)),
+					parseInt(id.slice(10, 12)),
+					parseInt(id.slice(12, 14))
+				).getTime();
+			}
+		}
+
+		// 시간을 HH:MM:SS 형식으로 변경
+		function formatRemainingTime(totalSeconds){
+			const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+			const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+			const seconds = String(Math.floor(totalSeconds % 60)).padStart(2, '0');
+			return `${hours}:${minutes}:${seconds}`;
+		}
+		
+		// 현재 시각 실시간 표시
+		function updateTime(){
+			const now = new Date();
+			const year = now.getFullYear();
+			const month = String(now.getMonth() + 1).padStart(2, '0');
+			const day = String(now.getDate()).padStart(2, '0');
+			const hours = now.getHours();
+			const minutes = String(now.getMinutes()).padStart(2, '0');
+			const seconds = String(now.getSeconds()).padStart(2, '0');
+			const ampm = hours >= 12 ? '오후' : '오전';
+			const hours12 = String(hours % 12 || 12).padStart(2, '0');
+			const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][now.getDay()];
+			const formattedTime = `현재 시각: ${year}.${month}.${day}.(${dayOfWeek}) ${ampm} ${hours12}:${minutes}:${seconds}`;
+			jQuery('.currentTime').text(formattedTime);
+		}
+		
+		// 일정 생성 
+		const schedules = [
+			{date: "2025.02.25.(화)", times: ["오전 12:10", "오후 09:00"]},
+			{date: "2025.02.26.(수)", times: ["오전 12:10", "오전 10:00", "오후 10:00"]},
+			{date: "2025.02.27.(목)", times: ["오후 10:00"]},
+			{date: "2025.02.28.(금)", times: ["오후 10:00"]},
+			{date: "2025.03.01.(토)", times: ["오후 04:00", "오후 10:00"]},
+			{date: "2025.03.02.(일)", times: ["오후 04:00", "오후 10:00"]},
+			{date: "2025.03.03.(월)", times: ["오후 04:00", "오후 10:00"]},
+			{date: "2025.03.04.(화)", times: ["오후 10:00"]},
+			{date: "2025.03.05.(수)", times: ["오후 10:00"]},
+			{date: "2025.03.06.(목)", times: ["오후 10:00"]},
+			{date: "2025.03.07.(금)", times: ["오후 10:00"]},
+			{date: "2025.03.08.(토)", times: ["오후 04:00", "오후 10:00"]},
+			{date: "2025.03.09.(일)", times: ["오후 04:00", "오후 10:00"]},
+			{date: "2025.03.10.(월)", times: ["오후 10:00"]},
+			{date: "2025.03.11.(화)", times: ["오후 10:00"]}
+		];
+
+		// 일정 요소 생성
+		jQuery(schedules).each(function(){
+			const schedule = this;
+
+			// 날짜 요소 생성
+			const dateElement = jQuery('<div class="date"></div>');
+			dateElement.html(`<p>${schedule.date}</p>`);
+			dateElement.attr('id', schedule.date.replace(/[^\d]/g, '') + '999999');
+			jQuery('main').append(dateElement);
+
+			// 시간 요소 생성
+			jQuery(schedule.times).each(function(){
+				const time = this;
+				const timeElement = jQuery('<div class="time"></div>');
+				timeElement.html(`
+					<p>${time}</p>
+					<hr>
+					<p>점령전 시작 전</p>
+				`);
+				let timeString = time.replace(/[^\d:]/g, '');
+				let [hour, minute] = timeString.split(':');
+				if(hour === '12' && time.includes('오전')) { hour = '00'; }
+				if(hour === '12' && time.includes('오후')) { hour = '12'; }
+				if(time.includes('오후') && hour !== '12') { hour = String(parseInt(hour) + 12); }
+				timeElement.attr('id', schedule.date.replace(/[^\d]/g, '') + hour + minute + '00');
+				jQuery('main').append(timeElement);
+			});
+		});
+
+		// 클래스 업데이트 함수들
+
+		// 과거 일정 처리
+		function updatePastClasses(){
+			const nowTime = Date.now();
+
+			jQuery('.date').each(function(){
+			    const id = jQuery(this).attr('id');
+			    if(id) {
+			        const datePart = id.substring(0, 8);
+			        const elementTime = new Date(
+			            parseInt(datePart.slice(0, 4)),
+			            parseInt(datePart.slice(4, 6)) - 1,
+			            parseInt(datePart.slice(6, 8))
+			        ).getTime();
+			        if(nowTime >= elementTime + 24 * 60 * 60 * 1000) {
+			            jQuery(this).addClass('pastDate');
+			        }
+			    }
+			});
+
+			// 시간 요소의 종료 시간이 지났으면 과거 처리
+			document.querySelectorAll('.time').forEach(element => {
+				const id = element.id;
+				if(id){
+					const startTime = parseElementTime(id);
+					// 점령전은 1시간 38분 동안 진행됨 (종료되면 과거 클래스 추가)
+					const endTime = startTime + (1 * 60 * 60 + 38 * 60) * 1000;
+					if(nowTime >= endTime){
+						element.classList.add('pastTime');
+						const secondParagraph = element.querySelectorAll('p')[1];
+						if(secondParagraph){
+							secondParagraph.textContent = '점령전 종료됨';
+						}
+					}
+				}
+			});
+		}
+
+		// 곧 시작될 일정 처리 (가장 가까운 미래의 요소)
+		function updateUpcomingClasses(){
+			const nowTime = Date.now();
+			let closestTimeElement = null;
+			let closestTimeDiff = Infinity;
+
+			document.querySelectorAll('.time').forEach(element => {
+				const id = element.id;
+				if(id){
+					const eventTime = parseElementTime(id);
+					if(eventTime > nowTime && eventTime - nowTime < closestTimeDiff){
+						closestTimeElement = element;
+						closestTimeDiff = eventTime - nowTime;
+					}
+				}
+			});
+
+			if(closestTimeElement){
+				const remainingSeconds = closestTimeDiff / 1000;
+				const timeStr = formatRemainingTime(remainingSeconds);
+				const secondParagraph = closestTimeElement.querySelectorAll('p')[1];
+				if(secondParagraph){
+					secondParagraph.textContent = `${timeStr} 뒤 점령전 시작`;
+				}
+			}
+		}
+
+		// 진행 중인 일정 처리
+		function updateOngoingClasses(){
+			const nowTime = Date.now();
+			document.querySelectorAll('.time').forEach(element => {
+				const id = element.id;
+				if(id){
+					const startTime = parseElementTime(id);
+					// 점령전은 1시간 38분 동안 진행됨 (요소 문구 실시간 수정)
+					const endTime = startTime + (1 * 60 * 60 + 38 * 60) * 1000;
+					if(nowTime >= startTime && nowTime < endTime){
+						const remainingSeconds = (endTime - nowTime) / 1000;
+						const timeStr = formatRemainingTime(remainingSeconds);
+						const secondParagraph = element.querySelectorAll('p')[1];
+						if(secondParagraph){
+							secondParagraph.textContent = `${timeStr} 뒤 점령전 종료`;
+						}
+						if(!element.classList.contains('nowTime')){
+							element.classList.add('nowTime');
+						}
+					}
+				}
+			});
+		}
+
+		// 지금의 일정으로 스크롤 이동
+		function scrollToToday(){
+			const now = new Date();
+			const todayDateString = now.getFullYear() +
+				String(now.getMonth() + 1).padStart(2, '0') +
+				String(now.getDate()).padStart(2, '0') + '999999';
+			const todayDateElement = document.querySelector(`#${CSS.escape(todayDateString)}`);
+			if(todayDateElement){
+				todayDateElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			}
+		}
+
+		function formatRemainingTime(totalSeconds){
+			const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+			const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+			const seconds = String(Math.floor(totalSeconds % 60)).padStart(2, '0');
+			return `${hours}:${minutes}:${seconds}`;
+		}
+
+		// 주기적 업데이트 설정
+		setInterval(updateTime, 1000);
+		updateTime();
+
+		setInterval(updatePastClasses, 1000);
+		updatePastClasses();
+
+		setInterval(updateUpcomingClasses, 1000);
+		updateUpcomingClasses();
+
+		setInterval(updateOngoingClasses, 1000);
+		updateOngoingClasses();
+
+		// 초기 스크롤 이동
+		scrollToToday();
+
+		// 추가 1: 점령전 5분 전에 푸시 알림 보내기 (중복 알림 방지)
+		function checkForBattleStart(){
+			const now = Date.now();
+			document.querySelectorAll('.time').forEach(element => {
+				const battleTime = parseElementTime(element.id);
+				const timeDiff = battleTime - now;
+				// 5분 전 ~ 4분 30초 전 범위 내일 때
+				if(timeDiff <= 5 * 60 * 1000 && timeDiff > 4.5 * 60 * 1000){
+					// 이미 알림을 보냈으면 건너뜀
+					if(!element.dataset.notified){
+						pushAlertBeforeFiveMins();
+						element.dataset.notified = "true";
+					}
+				}
+			});
+		}
+
+		// 푸시 알림 보내기 함수
+		function pushAlertBeforeFiveMins(){
+			if(Notification.permission === "granted"){
+				new Notification("점령전 시작 5분 전!", {
+					body: "곧 카오스 점령전이 시작됩니다, 준비하세요!",
+					icon: 'titi1.webp',
+				});
+			}
+		}
+
+		// 10초마다 점령전 시작 5분 전 체크
+		setInterval(checkForBattleStart, 10 * 1000);
+
+		pushAlertPermCheck();
+
+	});
+
+	// 추가 1: 푸시 알림 권한 확인
+	function pushAlertPermCheck(){
+		const btn = document.getElementById('pushAlertCheck');
+		if(!btn) return;
+
+		btn.removeEventListener('click', requestNotificationPermission);
+		btn.addEventListener('click', requestNotificationPermission);
+	}
+
+	function requestNotificationPermission(){
+		if(Notification.permission === "granted"){
+			alert("알림 권한을 허용하면, 이 페이지를 브라우저에서 열어 놓았을 때 점령전 시작 5분 전에 알림을 받아볼 수 있습니다.\n\n이미 알림이 활성화되어 있습니다.");
+			return;
+		}
+		
+		Notification.requestPermission().then(permission => {
+			if(permission === "granted"){
+				alert("알림 권한을 허용하면, 이 페이지를 브라우저에서 열어 놓았을 때 점령전 시작 5분 전에 알림을 받아볼 수 있습니다.\n\n현재 알림이 활성화된 상태입니다.");
+			}else{
+				alert("알림 권한을 허용하면, 이 페이지를 브라우저에서 열어 놓았을 때 점령전 시작 5분 전에 알림을 받아볼 수 있습니다.\n\n현재 알림 권한이 거부된 상태인 것 같습니다. 알림을 허용해야 푸시 알림을 받을 수 있습니다.");
+			}
+		});
+	}
+
+	// 추가 2: 배경 동영상 숨기기 및 표시
+	document.getElementById('toggleBgVideo').addEventListener('click', function() {
+		const bgVideo = document.querySelector('.bgVideo');
+		const videoContent = document.querySelector('.bgVideoContent');
+
+		if(bgVideo.style.display === 'none'){
+			bgVideo.style.display = 'block';
+			videoContent.play();
+		}else{
+			bgVideo.style.display = 'none';
+			videoContent.pause();
+		}
+	});
+
+</script>
+</html>
